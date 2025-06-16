@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการการเงินห้องเรียน ม.3/5 - Montfort College</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Dynamic Background Particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="logo-text">
+                <h1>ระบบจัดการการเงินห้องเรียน</h1>
+                <p>ห้อง ม.3/5 - Montfort College</p>
+            </div>
+        </div>
+        <div class="user-info">
+            <div class="user-details">
+                <div class="user-name" id="userName">กำลังโหลด...</div>
+                <div class="user-role" id="userRole">กำลังโหลด...</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                ออกจากระบบ
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        แดชบอร์ด
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#income" class="nav-link" onclick="showSection('income')">
+                        <i class="fas fa-plus-circle"></i>
+                        รายรับ
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#expenses" class="nav-link" onclick="showSection('expenses')">
+                        <i class="fas fa-minus-circle"></i>
+                        รายจ่าย
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link" onclick="showSection('reports')">
+                        <i class="fas fa-chart-bar"></i>
+                        รายงาน
+                    </a>
+                </li>
+                <li class="nav-item admin-only" style="display: none;">
+                    <a href="#students" class="nav-link" onclick="showSection('students')">
+                        <i class="fas fa-users"></i>
+                        รายชื่อนักเรียน
+                    </a>
+                </li>
+                <li class="nav-item admin-only" style="display: none;">
+                    <a href="#payments" class="nav-link" onclick="showSection('payments')">
+                        <i class="fas fa-credit-card"></i>
+                        จัดการการชำระเงิน
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <h2 class="section-title">
+                <i class="fas fa-tachometer-alt"></i>
+                แดชบอร์ด
+            </h2>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-plus-circle" style="color: #16a34a;"></i>
+                        รายรับรวม
+                    </div>
+                    <div class="card-value" id="totalIncome">฿0</div>
+                    <div class="card-description">รายรับทั้งหมดในเดือนนี้</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-minus-circle" style="color: #dc2626;"></i>
+                        รายจ่ายรวม
+                    </div>
+                    <div class="card-value" id="totalExpenses">฿0</div>
+                    <div class="card-description">รายจ่ายทั้งหมดในเดือนนี้</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-wallet" style="color: #1e40af;"></i>
+                        ยอดคงเหลือ
+                    </div>
+                    <div class="card-value" id="balance">฿0</div>
+                    <div class="card-description">ยอดเงินคงเหลือปัจจุบัน</div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <div class="card-title">
+                        <i class="fas fa-exchange-alt" style="color: #7c3aed;"></i>
+                        ธุรกรรม
+                    </div>
+                    <div class="card-value" id="transactionCount">0</div>
+                    <div class="card-description">จำนวนธุรกรรมทั้งหมด</div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="table-container">
+                <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                    <i class="fas fa-history"></i>
+                    ธุรกรรมล่าสุด
+                </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>รายการ</th>
+                            <th>ประเภท</th>
+                            <th>จำนวนเงิน</th>
+                            <th>ผู้บันทึก</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentTransactions">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280; font-style: italic;">
+                                ยังไม่มีธุรกรรม
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Income Section -->
+        <section id="income" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-plus-circle"></i>
+                เพิ่มรายรับ
+            </h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">รายการ</label>
+                    <input type="text" class="form-input" id="incomeDescription" placeholder="เช่น ค่าธรรมเนียมการศึกษา">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">จำนวนเงิน (บาท)</label>
+                    <input type="number" class="form-input" id="incomeAmount" placeholder="0" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">วันที่</label>
+                    <input type="date" class="form-input" id="incomeDate">
+                </div>
+            </div>
+            
+            <button class="btn btn-success" onclick="addIncome()">
+                <i class="fas fa-plus"></i>
+                เพิ่มรายรับ
+            </button>
+
+            <div class="table-container" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                    <i class="fas fa-list"></i>
+                    รายการรายรับ
+                </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>รายการ</th>
+                            <th>จำนวนเงิน</th>
+                            <th>ผู้บันทึก</th>
+                            <th>การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="incomeList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280; font-style: italic;">
+                                ยังไม่มีรายรับ
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Expenses Section -->
+        <section id="expenses" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-minus-circle"></i>
+                เพิ่มรายจ่าย
+            </h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">รายการ</label>
+                    <input type="text" class="form-input" id="expenseDescription" placeholder="เช่น ค่าอุปกรณ์การเรียน">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">จำนวนเงิน (บาท)</label>
+                    <input type="number" class="form-input" id="expenseAmount" placeholder="0" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">วันที่</label>
+                    <input type="date" class="form-input" id="expenseDate">
+                </div>
+            </div>
+            
+            <button class="btn btn-danger" onclick="addExpense()">
+                <i class="fas fa-plus"></i>
+                เพิ่มรายจ่าย
+            </button>
+
+            <div class="table-container" style="margin-top: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                    <i class="fas fa-list"></i>
+                    รายการรายจ่าย
+                </h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>วันที่</th>
+                            <th>รายการ</th>
+                            <th>จำนวนเงิน</th>
+                            <th>ผู้บันทึก</th>
+                            <th>การจัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseList">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #6b7280; font-style: italic;">
+                                ยังไม่มีรายจ่าย
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="reports" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-bar"></i>
+                รายงานการเงิน
+            </h2>
+            
+            <div class="summary-section">
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-value" id="reportTotalIncome">฿0</div>
+                        <div class="summary-label">รายรับรวม</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="reportTotalExpenses">฿0</div>
+                        <div class="summary-label">รายจ่ายรวม</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="reportBalance">฿0</div>
+                        <div class="summary-label">ยอดคงเหลือ</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="reportTransactionCount">0</div>
+                        <div class="summary-label">จำนวนธุรกรรม</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                        <i class="fas fa-chart-pie"></i>
+                        กราฟแสดงรายรับ-รายจ่าย
+                    </h3>
+                    <canvas id="financialChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Students Section (Admin Only) -->
+        <section id="students" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                รายชื่อนักเรียน
+            </h2>
+            
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ลำดับ</th>
+                            <th>รหัสนักเรียน</th>
+                            <th>ชื่อ-นามสกุล</th>
+                            <th>สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentList">
+                        <!-- Student list will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Payment Management Section (Admin Only) -->
+        <section id="payments" class="content-section">
+            <h2 class="section-title">
+                <i class="fas fa-credit-card"></i>
+                จัดการการชำระเงิน
+            </h2>
+            
+            <div class="payment-controls">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">วันที่ชำระเงิน</label>
+                        <input type="date" class="form-input" id="paymentDate">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="addPaymentDay()">
+                            <i class="fas fa-plus"></i>
+                            เพิ่มวันชำระเงิน
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="paymentDays">
+                <!-- Payment days will be dynamically generated -->
+            </div>
+
+            <!-- Payment Summary -->
+            <div class="summary-section">
+                <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                    <i class="fas fa-calculator"></i>
+                    สรุปการชำระเงิน
+                </h3>
+                
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalPaid">฿0</div>
+                        <div class="summary-label">ยอดชำระแล้ว</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalPending">฿0</div>
+                        <div class="summary-label">ยอดค้างชำระ</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="paymentRate">0%</div>
+                        <div class="summary-label">อัตราการชำระ</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-value" id="totalStudents">41</div>
+                        <div class="summary-label">จำนวนนักเรียนทั้งหมด</div>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">
+                        <i class="fas fa-chart-line"></i>
+                        กราฟแสดงการชำระเงิน
+                    </h3>
+                    <canvas id="paymentChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html> 
